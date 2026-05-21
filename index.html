@@ -1,622 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proposal Comparison Report — Alliance OS</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alliance OS — Technical Evaluation &amp; Review Console | Sayaintel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0E0F13;
-  --surface:#16181F;
-  --surface2:#1E2029;
-  --border:#2A2C38;
-  --text:#E8E9F0;
-  --muted:#6B7080;
-  --accent:#F5A623;
-  --accent2:#4F8EF7;
-  --accent3:#6BCB77;
-  --red:#E05252;
-  --serif:'Syne',sans-serif;
-  --sans:'DM Sans',sans-serif;
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  :root{
+    --bg:#06070A; --panel:#0C0E13; --card:#10131A; --line:rgba(255,255,255,0.10);
+    --tx:#F3F5F8; --tx2:#A6ADBA; --tx3:#727B8A;
+    --blue:#4DA6FF; --cyan:#38E1D4; --green:#3FCF8E; --amber:#F2B450; --red:#FF6B6B;
+    --grad:linear-gradient(90deg,#4DA6FF,#38E1D4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:96px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,15,19,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 3rem;height:56px;display:flex;align-items:center;justify-content:space-between}
-.nav-brand{font-family:var(--serif);font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent)}
-.nav-links{display:flex;gap:1.5rem}
-.nav-links a{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s}
-.nav-links a:hover{color:var(--text)}
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .ambient .g{position:absolute;border-radius:50%;filter:blur(80px);opacity:.45}
+  .g1{width:55vw;height:55vw;top:-22vw;right:-12vw;background:radial-gradient(circle,rgba(77,166,255,.30),transparent 62%)}
+  .g2{width:50vw;height:50vw;bottom:-24vw;left:-14vw;background:radial-gradient(circle,rgba(56,225,212,.18),transparent 62%)}
 
-/* LAYOUT */
-.page{max-width:1280px;margin:0 auto;padding:100px 3rem 6rem}
+  .wrap{position:relative;z-index:2;max-width:920px;margin:0 auto;padding:0 22px}
 
-/* HERO */
-.report-hero{text-align:center;padding:3rem 0 5rem;border-bottom:1px solid var(--border);margin-bottom:5rem}
-.report-eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:1.5rem}
-.report-title{font-family:var(--serif);font-size:clamp(2.5rem,5vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1.5rem}
-.report-title span{color:var(--accent)}
-.report-sub{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.8;font-weight:300}
-.report-meta{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
-.meta-item{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.6rem 1.2rem;font-size:12px;color:var(--muted)}
-.meta-item strong{color:var(--text);font-weight:500}
+  header.top{border-bottom:1px solid var(--line);background:rgba(6,7,10,.6);backdrop-filter:blur(10px);position:sticky;top:0;z-index:20}
+  .topin{max-width:920px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .brand{display:flex;align-items:center;gap:9px}
+  .sq{width:16px;height:16px;border-radius:4px;background:var(--blue)}
+  .wm{font-size:16px;font-weight:800;letter-spacing:2.4px}.wm .b{color:var(--blue)}
+  .badge{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.6px;color:var(--tx2);border:1px solid var(--line);border-radius:30px;padding:5px 11px}
 
-/* LEGEND */
-.legend{display:flex;gap:1.5rem;align-items:center;margin-bottom:3rem;flex-wrap:wrap}
-.legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
-.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.dot-a{background:#F5A623}
-.dot-b{background:#4F8EF7}
-.dot-c{background:#6BCB77}
+  .hero{padding:38px 0 8px}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:3px;color:var(--blue);text-transform:uppercase;font-weight:600}
+  h1{font-size:clamp(26px,4.4vw,38px);font-weight:800;letter-spacing:-.6px;margin-top:10px;line-height:1.08}
+  .sub{font-size:15px;color:var(--tx2);margin-top:12px;max-width:680px}
+  .howto{margin-top:16px;border:1px solid rgba(77,166,255,.28);background:linear-gradient(90deg,rgba(77,166,255,.10),rgba(56,225,212,.04));border-radius:12px;padding:13px 16px;font-size:13.5px;color:#CdD3DC;display:flex;gap:10px;align-items:flex-start}
+  .howto b{color:#fff}
+  .howto svg{flex:none;margin-top:2px}
 
-/* SCORE SUMMARY */
-.score-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:5rem}
-.score-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:center}
-.score-card.winner{border-color:var(--accent3);background:rgba(107,203,119,0.04)}
-.score-card-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
-.score-card-name{font-family:var(--serif);font-size:1.2rem;font-weight:700;margin-bottom:0.5rem}
-.score-card-name.a{color:var(--accent)}
-.score-card-name.b{color:var(--accent2)}
-.score-card-name.c{color:var(--accent3)}
-.score-card-score{font-family:var(--serif);font-size:3.5rem;font-weight:800;line-height:1}
-.score-card-score.a{color:var(--accent)}
-.score-card-score.b{color:var(--accent2)}
-.score-card-score.c{color:var(--accent3)}
-.score-card-total{font-size:12px;color:var(--muted);margin-top:4px}
-.winner-badge{display:inline-block;background:rgba(107,203,119,0.15);color:var(--accent3);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-top:0.75rem}
+  .meterwrap{display:flex;align-items:center;gap:12px;margin-top:20px}
+  .meter{flex:1;height:7px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden}
+  .meter .fill{height:100%;width:0;background:var(--grad);transition:width .35s ease}
+  .meterlbl{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--tx2);white-space:nowrap}
 
-/* SECTIONS */
-.section{margin-bottom:5rem}
-.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-.section-num{font-family:var(--serif);font-size:2rem;font-weight:800;color:var(--border);line-height:1}
-.section-title{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--text)}
-.section-desc{font-size:14px;color:var(--muted);margin-bottom:2rem;line-height:1.7;max-width:780px}
+  .ident{display:grid;grid-template-columns:1fr 1fr 180px;gap:12px;margin-top:22px}
+  .ident .f{border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.025);padding:10px 13px}
+  .ident label{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.2px;color:var(--tx3);text-transform:uppercase;margin-bottom:6px}
+  .ident input{width:100%;background:transparent;border:none;outline:none;color:#fff;font-size:14px;font-family:inherit}
+  .ident input::placeholder{color:#4b5462}
 
-/* COMPARISON TABLE */
-.comp-table{width:100%;border-collapse:collapse;margin-bottom:2rem}
-.comp-table th{padding:0.75rem 1rem;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;background:var(--surface2);border:1px solid var(--border);text-align:left}
-.comp-table th.head-a{color:var(--accent)}
-.comp-table th.head-b{color:var(--accent2)}
-.comp-table th.head-c{color:var(--accent3)}
-.comp-table td{padding:0.875rem 1rem;border:1px solid var(--border);font-size:13px;color:var(--text);vertical-align:top;line-height:1.6;background:var(--surface)}
-.comp-table tr:nth-child(even) td{background:var(--surface2)}
-.comp-table td.criterion{color:var(--muted);font-weight:500;font-size:12px;letter-spacing:0.04em;background:var(--surface2) !important;min-width:140px}
-.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-bottom:4px}
-.tag-win{background:rgba(107,203,119,0.15);color:var(--accent3)}
-.tag-ok{background:rgba(79,142,247,0.12);color:var(--accent2)}
-.tag-gap{background:rgba(224,82,82,0.12);color:var(--red)}
-.tag-neutral{background:rgba(107,112,128,0.2);color:var(--muted)}
+  .domains{margin-top:26px;display:flex;flex-direction:column;gap:14px}
+  .domain{border:1px solid var(--line);border-left:3px solid rgba(255,255,255,.14);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));padding:18px 20px;transition:border-color .2s}
+  .domain[data-status="Meets our standard"]{border-left-color:var(--green)}
+  .domain[data-status="Needs change"]{border-left-color:var(--amber)}
+  .domain[data-status="Blocker"]{border-left-color:var(--red)}
+  .dh{display:flex;gap:13px;align-items:flex-start}
+  .dno{font-family:"JetBrains Mono",monospace;font-size:14px;font-weight:600;color:var(--blue);padding-top:1px}
+  .dt{font-size:16.5px;font-weight:700;color:#fff}
+  .dg{font-size:12.5px;color:var(--tx3);margin-top:4px;line-height:1.45}
+  .drow{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+  .field{flex:1;min-width:160px}
+  .field>span{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.2px;color:var(--tx3);text-transform:uppercase;margin-bottom:6px}
+  select,textarea{width:100%;background:#0A0C12;border:1px solid var(--line);border-radius:9px;color:#fff;font-family:inherit;font-size:14px;padding:9px 11px;outline:none}
+  select:focus,textarea:focus{border-color:var(--blue)}
+  textarea{resize:vertical;min-height:42px;line-height:1.45}
+  .fl{display:block;margin-top:12px}
+  .fl>span{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.2px;color:var(--tx3);text-transform:uppercase;margin-bottom:6px}
 
-/* SCORE ROW */
-.score-row{display:flex;gap:1rem;margin-top:1.5rem;margin-bottom:3rem;flex-wrap:wrap}
-.score-chip{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;min-width:160px}
-.score-chip-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.score-chip-val{font-family:var(--serif);font-size:1.6rem;font-weight:700}
-.score-chip-val.a{color:var(--accent)}
-.score-chip-val.b{color:var(--accent2)}
-.score-chip-val.c{color:var(--accent3)}
+  /* sticky action bar */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(8,10,15,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+  .barin{max-width:920px;margin:0 auto;padding:13px 22px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .barin .status{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--tx2);margin-right:auto}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;padding:11px 16px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--tx);transition:transform .12s,border-color .2s,background .2s}
+  .btn:hover{transform:translateY(-1px);border-color:var(--blue)}
+  .btn.primary{background:var(--grad);color:#04121f;border:none}
+  .btn.ghost.danger:hover{border-color:var(--red);color:var(--red)}
+  .btn svg{flex:none}
 
-/* INSIGHT BOX */
-.insight{background:var(--surface2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1.25rem 1.5rem;margin:1.5rem 0;font-size:13px;color:var(--muted);line-height:1.75}
-.insight strong{color:var(--text)}
-.insight.blue{border-color:var(--accent2)}
-.insight.green{border-color:var(--accent3)}
-.insight.red{border-color:var(--red)}
+  footer{padding:26px 0 10px;text-align:center}
+  footer .l{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--tx3)}
+  footer a{color:var(--blue);text-decoration:none}
 
-/* RADAR GRID (CSS-based) */
-.radar-section{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem}
-.radar-col h4{font-family:var(--serif);font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--muted)}
-.bar-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:8px}
-.bar-label{font-size:11px;color:var(--muted);width:130px;flex-shrink:0;text-align:right}
-.bar-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;border-radius:3px;transition:width 0.3s}
-.bar-fill.a{background:var(--accent)}
-.bar-fill.b{background:var(--accent2)}
-.bar-fill.c{background:var(--accent3)}
-.bar-score{font-size:11px;font-weight:600;width:24px;text-align:right}
-.bar-score.a{color:var(--accent)}
-.bar-score.b{color:var(--accent2)}
-.bar-score.c{color:var(--accent3)}
+  .toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:#10131A;border:1px solid var(--blue);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:40;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* VERDICT */
-.verdict{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2.5rem;margin-bottom:2rem}
-.verdict-title{font-family:var(--serif);font-size:1.4rem;font-weight:700;margin-bottom:1rem}
-.verdict-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:1.5rem}
-.verdict-col h5{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
-.verdict-col h5.a{color:var(--accent)}
-.verdict-col h5.b{color:var(--accent2)}
-.verdict-col h5.c{color:var(--accent3)}
-.verdict-col ul{list-style:none;display:flex;flex-direction:column;gap:6px}
-.verdict-col li{font-size:12px;color:var(--muted);line-height:1.5;padding-left:14px;position:relative}
-.verdict-col li::before{content:'→';position:absolute;left:0;color:var(--border);font-size:10px}
+  @media(max-width:680px){.ident{grid-template-columns:1fr}.drow{flex-direction:column}}
 
-/* FINAL */
-.final-box{background:linear-gradient(135deg,rgba(107,203,119,0.08),rgba(107,203,119,0.02));border:1px solid rgba(107,203,119,0.25);border-radius:12px;padding:3rem;text-align:center;margin-top:4rem}
-.final-title{font-family:var(--serif);font-size:2rem;font-weight:800;color:var(--accent3);margin-bottom:0.75rem}
-.final-sub{font-size:15px;color:var(--muted);max-width:640px;margin:0 auto 2rem;line-height:1.8}
-.final-chips{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-.final-chip{background:rgba(107,203,119,0.1);border:1px solid rgba(107,203,119,0.2);border-radius:6px;padding:0.5rem 1rem;font-size:12px;color:var(--accent3);font-weight:600}
-
-@media(max-width:900px){
-  nav{padding:0 1.5rem}
-  .nav-links{display:none}
-  .page{padding:80px 1.5rem 4rem}
-  .score-summary{grid-template-columns:1fr}
-  .verdict-grid{grid-template-columns:1fr}
-  .radar-section{grid-template-columns:1fr}
-}
+  /* PRINT FALLBACK — clean light version */
+  @media print{
+    :root{--tx:#0E1626;--tx2:#444f5e;--tx3:#6a7585;--line:#cdd5e0}
+    body{background:#fff;color:#0E1626;padding:0}
+    .ambient,.bar,.toast,header.top .badge,.howto svg,.meterwrap{display:none!important}
+    header.top{position:static;background:#fff;border-bottom:2px solid #0E1626}
+    .wm{color:#0E1626}.sq{background:#1E66E6}
+    .hero{padding:18px 0 6px}
+    h1{color:#0E1626}.eyebrow{color:#1E66E6}
+    .howto{background:#fff;border:1px solid #cdd5e0;color:#333}
+    .howto b{color:#0E1626}
+    .domain{margin-bottom:8px}
+    .domain{break-inside:avoid;border:1px solid #cdd5e0;border-left:3px solid #1E66E6;background:#fff;box-shadow:none}
+    .dt{color:#0E1626}select,textarea,.ident input{background:#fff;border:1px solid #cdd5e0;color:#0E1626}
+    .domains{gap:10px}
+  }
 </style>
 </head>
 <body>
+  <div class="ambient"><div class="g g1"></div><div class="g g2"></div></div>
 
-<nav>
-  <div class="nav-brand">Proposal Comparison Report</div>
-  <div class="nav-links">
-    <a href="#overview">Overview</a>
-    <a href="#sections">Section Analysis</a>
-    <a href="#tech">Tech Stack</a>
-    <a href="#verdict">Verdict</a>
-  </div>
-</nav>
+  <header class="top"><div class="topin">
+    <div class="brand"><span class="sq"></span><span class="wm">SAYA<span class="b">INTEL</span></span></div>
+    <span class="badge">CONFIDENTIAL · ALLIANCE INSURANCE</span>
+  </div></header>
 
-<div class="page">
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow">Technical Evaluation &amp; Review</div>
+      <h1>Alliance OS — IT Review Console</h1>
+      <p class="sub">A structured space for Alliance IT to record observations, concerns and requested changes across the platform. This is the working document behind the technical sign-off — your input shapes the final configuration.</p>
 
-  <!-- HERO -->
-  <div class="report-hero" id="overview">
-    <div class="report-eyebrow">Deep Analysis Report · May 2026</div>
-    <h1 class="report-title">Three Proposals.<br>One <span>Alliance.</span></h1>
-    <p class="report-sub">A section-by-section, criteria-by-criteria breakdown of the Alliance Group proposal built here, the Bytesforce InsurerMate technical specification, and the Sayaintel Alliance OS proposal — scored on content depth, technical credibility, commercial persuasiveness, and design quality.</p>
-    <div class="report-meta">
-      <div class="meta-item"><strong>Proposal A</strong> — Alliance Group (this session)</div>
-      <div class="meta-item"><strong>Proposal B</strong> — Bytesforce InsurerMate (PDF spec)</div>
-      <div class="meta-item"><strong>Proposal C</strong> — Sayaintel Alliance OS</div>
-      <div class="meta-item"><strong>Sections Compared</strong> — 10 categories</div>
-      <div class="meta-item"><strong>Max Score</strong> — 100 pts per proposal</div>
-    </div>
-  </div>
-
-  <!-- LEGEND -->
-  <div class="legend">
-    <div class="legend-item"><div class="dot dot-a"></div> Proposal A — Alliance Group (this session)</div>
-    <div class="legend-item"><div class="dot dot-b"></div> Proposal B — Bytesforce InsurerMate</div>
-    <div class="legend-item"><div class="dot dot-c"></div> Proposal C — Sayaintel Alliance OS</div>
-  </div>
-
-  <!-- OVERALL SCORES -->
-  <div class="score-summary">
-    <div class="score-card">
-      <div class="score-card-label">Proposal A</div>
-      <div class="score-card-name a">Alliance Group</div>
-      <div class="score-card-score a">63</div>
-      <div class="score-card-total">out of 100</div>
-    </div>
-    <div class="score-card">
-      <div class="score-card-label">Proposal B</div>
-      <div class="score-card-name b">Bytesforce InsurerMate</div>
-      <div class="score-card-score b">71</div>
-      <div class="score-card-total">out of 100</div>
-    </div>
-    <div class="score-card winner">
-      <div class="score-card-label">Proposal C</div>
-      <div class="score-card-name c">Sayaintel Alliance OS</div>
-      <div class="score-card-score c">89</div>
-      <div class="score-card-total">out of 100</div>
-      <div class="winner-badge">Overall Leader</div>
-    </div>
-  </div>
-
-  <!-- VISUAL BREAKDOWN -->
-  <div class="section" id="sections">
-    <div class="section-header">
-      <div class="section-num">00</div>
-      <div class="section-title">Scoring Breakdown by Category</div>
-    </div>
-    <div class="radar-section">
-      <div class="radar-col">
-        <h4>Category Scores — Proposal A (Alliance Group)</h4>
-        <div class="bar-row"><div class="bar-label">Hero / Positioning</div><div class="bar-track"><div class="bar-fill a" style="width:70%"></div></div><div class="bar-score a">7</div></div>
-        <div class="bar-row"><div class="bar-label">Trust Signals</div><div class="bar-track"><div class="bar-fill a" style="width:60%"></div></div><div class="bar-score a">6</div></div>
-        <div class="bar-row"><div class="bar-label">What We're Building</div><div class="bar-track"><div class="bar-fill a" style="width:60%"></div></div><div class="bar-score a">6</div></div>
-        <div class="bar-row"><div class="bar-label">Portals</div><div class="bar-track"><div class="bar-fill a" style="width:70%"></div></div><div class="bar-score a">7</div></div>
-        <div class="bar-row"><div class="bar-label">Architecture</div><div class="bar-track"><div class="bar-fill a" style="width:55%"></div></div><div class="bar-score a">5.5</div></div>
-        <div class="bar-row"><div class="bar-label">Deployment</div><div class="bar-track"><div class="bar-fill a" style="width:65%"></div></div><div class="bar-score a">6.5</div></div>
-        <div class="bar-row"><div class="bar-label">Timeline</div><div class="bar-track"><div class="bar-fill a" style="width:70%"></div></div><div class="bar-score a">7</div></div>
-        <div class="bar-row"><div class="bar-label">Maintenance</div><div class="bar-track"><div class="bar-fill a" style="width:65%"></div></div><div class="bar-score a">6.5</div></div>
-        <div class="bar-row"><div class="bar-label">Incident Response</div><div class="bar-track"><div class="bar-fill a" style="width:60%"></div></div><div class="bar-score a">6</div></div>
-        <div class="bar-row"><div class="bar-label">Design / UX</div><div class="bar-track"><div class="bar-fill a" style="width:55%"></div></div><div class="bar-score a">5.5</div></div>
+      <div class="howto">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#4DA6FF" stroke-width="2"/><path d="M12 8v5" stroke="#4DA6FF" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16.3" r="1.2" fill="#4DA6FF"/></svg>
+        <div>Work through each section in your normal frame of mind. For each area set a <b>status</b> and <b>priority</b>, and note your <b>concern</b> and the <b>change you'd want</b>. Your entries save automatically in this browser. When done, use <b>Download</b>, <b>Copy</b> or <b>Email</b> at the bottom to send your review back to the Sayaintel team.</div>
       </div>
-      <div class="radar-col">
-        <h4>Category Scores — Proposal B vs C</h4>
-        <div class="bar-row"><div class="bar-label">Hero / Positioning</div><div class="bar-track"><div class="bar-fill b" style="width:50%"></div></div><div class="bar-score b">5</div></div>
-        <div class="bar-row"><div class="bar-label">Trust Signals</div><div class="bar-track"><div class="bar-fill b" style="width:80%"></div></div><div class="bar-score b">8</div></div>
-        <div class="bar-row"><div class="bar-label">What We're Building</div><div class="bar-track"><div class="bar-fill b" style="width:90%"></div></div><div class="bar-score b">9</div></div>
-        <div class="bar-row"><div class="bar-label">Portals</div><div class="bar-track"><div class="bar-fill b" style="width:85%"></div></div><div class="bar-score b">8.5</div></div>
-        <div class="bar-row"><div class="bar-label">Architecture</div><div class="bar-track"><div class="bar-fill b" style="width:90%"></div></div><div class="bar-score b">9</div></div>
-        <div class="bar-row"><div class="bar-label">Deployment</div><div class="bar-track"><div class="bar-fill b" style="width:80%"></div></div><div class="bar-score b">8</div></div>
-        <div class="bar-row"><div class="bar-label">Timeline</div><div class="bar-track"><div class="bar-fill b" style="width:50%"></div></div><div class="bar-score b">5</div></div>
-        <div class="bar-row"><div class="bar-label">Maintenance</div><div class="bar-track"><div class="bar-fill b" style="width:80%"></div></div><div class="bar-score b">8</div></div>
-        <div class="bar-row"><div class="bar-label">Incident Response</div><div class="bar-track"><div class="bar-fill b" style="width:85%"></div></div><div class="bar-score b">8.5</div></div>
-        <div class="bar-row"><div class="bar-label">Design / UX</div><div class="bar-track"><div class="bar-fill b" style="width:30%"></div></div><div class="bar-score b">3</div></div>
-        <br>
-        <div class="bar-row"><div class="bar-label">Hero / Positioning</div><div class="bar-track"><div class="bar-fill c" style="width:95%"></div></div><div class="bar-score c">9.5</div></div>
-        <div class="bar-row"><div class="bar-label">Trust Signals</div><div class="bar-track"><div class="bar-fill c" style="width:85%"></div></div><div class="bar-score c">8.5</div></div>
-        <div class="bar-row"><div class="bar-label">What We're Building</div><div class="bar-track"><div class="bar-fill c" style="width:90%"></div></div><div class="bar-score c">9</div></div>
-        <div class="bar-row"><div class="bar-label">Portals</div><div class="bar-track"><div class="bar-fill c" style="width:95%"></div></div><div class="bar-score c">9.5</div></div>
-        <div class="bar-row"><div class="bar-label">Architecture</div><div class="bar-track"><div class="bar-fill c" style="width:85%"></div></div><div class="bar-score c">8.5</div></div>
-        <div class="bar-row"><div class="bar-label">Deployment</div><div class="bar-track"><div class="bar-fill c" style="width:90%"></div></div><div class="bar-score c">9</div></div>
-        <div class="bar-row"><div class="bar-label">Timeline</div><div class="bar-track"><div class="bar-fill c" style="width:85%"></div></div><div class="bar-score c">8.5</div></div>
-        <div class="bar-row"><div class="bar-label">Maintenance</div><div class="bar-track"><div class="bar-fill c" style="width:90%"></div></div><div class="bar-score c">9</div></div>
-        <div class="bar-row"><div class="bar-label">Incident Response</div><div class="bar-track"><div class="bar-fill c" style="width:85%"></div></div><div class="bar-score c">8.5</div></div>
-        <div class="bar-row"><div class="bar-label">Design / UX</div><div class="bar-track"><div class="bar-fill c" style="width:95%"></div></div><div class="bar-score c">9.5</div></div>
+
+      <div class="meterwrap">
+        <div class="meter"><div class="fill" id="meterFill"></div></div>
+        <span class="meterlbl" id="meterLbl">0 / 8 reviewed</span>
       </div>
-    </div>
-  </div>
 
-  <!-- SECTION 1 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">01</div>
-      <div class="section-title">Hero / Intro & Positioning</div>
-    </div>
-    <p class="section-desc">The opening section sets the tone for the entire proposal. A strong hero must establish who the seller is, what they are offering, why it matters, and what makes it different — within the first 10 seconds of reading.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Headline Clarity</td><td><span class="tag tag-ok">Adequate</span><br>Strong serif headline: "The Operating System for Modern Insurance." Clear but generic positioning without a differentiated angle.</td><td><span class="tag tag-gap">Weak</span><br>No true hero — opens as a technical spec document. No narrative hook or emotional connection whatsoever.</td><td><span class="tag tag-win">Best</span><br>"Your insurance OS, completely reimagined." Immediately positions as transformation, not a feature list.</td></tr>
-        <tr><td class="criterion">Value Proposition</td><td><span class="tag tag-ok">Good</span><br>Covers unification of admin, claims, portals, compliance. Solid but reads as a description, not a promise.</td><td><span class="tag tag-gap">Missing</span><br>Pure technical document. No commercial value proposition. Written for engineers, not decision-makers.</td><td><span class="tag tag-win">Excellent</span><br>Explicitly states: "Not a policy system upgrade — the insurance operating layer your business will run on." Specific and bold.</td></tr>
-        <tr><td class="criterion">Quantified Claims</td><td><span class="tag tag-gap">None</span><br>No numbers, percentages, or benchmarks in the hero section.</td><td><span class="tag tag-neutral">N/A</span><br>No hero. First stats appear deep in tech spec pages.</td><td><span class="tag tag-win">Strong</span><br>Hero shows: 15m→90s workflow reduction, 99% APIs ≤3s, ≤6h DR, 80% APIs within 1s, ≤15m RPO. Data-led opening.</td></tr>
-        <tr><td class="criterion">Audience Fit</td><td><span class="tag tag-ok">Mixed</span><br>Written for both business and IT stakeholders, but leans commercial without enough technical backing at the top.</td><td><span class="tag tag-gap">IT Only</span><br>Entirely for CTO/IT. Business stakeholders (CEO, COO) would disengage within 2 pages.</td><td><span class="tag tag-win">Dual</span><br>Business narrative on top, numbers that executives trust, with technical proof deep in the document. Works for both audiences.</td></tr>
-        <tr><td class="criterion">Emotional Pull</td><td><span class="tag tag-ok">Moderate</span><br>Navy-gold visual identity creates a premium feel but the copy is not emotionally compelling.</td><td><span class="tag tag-gap">None</span><br>Zero emotional engagement. Opening slide is simply the product name and "Technical Specifications."</td><td><span class="tag tag-win">High</span><br>Framing around transformation ("not 2009 tech") with a strong closing: "infrastructure your business will grow on."</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">7 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">9.5 / 10</div></div>
-    </div>
-    <div class="insight"><strong>Key Finding:</strong> Sayaintel's hero is the clear winner because it leads with transformation metrics, not just a tagline. Alliance Group's is competent but generic. Bytesforce has no hero — it opens as a spec sheet, immediately alienating non-technical decision-makers who often control the buying decision.</div>
-  </div>
-
-  <!-- SECTION 2 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">02</div>
-      <div class="section-title">Trust Badges & Credibility Signals</div>
-    </div>
-    <p class="section-desc">Trust signals establish that the vendor can deliver. This includes certifications, technology partners, SLA commitments, performance data, and demonstrable track record.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Security Certifications</td><td><span class="tag tag-ok">Listed</span><br>SOC 2 Type II, GDPR listed as trust badges. Not elaborated or proven — presented as assertions.</td><td><span class="tag tag-win">Proven</span><br>Details AES-256 PII encryption, BCrypt 11, TLSv1.2/1.3, WAF, SSO/SAML/OAuth2/JWT, URL anti-fraud — each with implementation specifics.</td><td><span class="tag tag-win">Proven</span><br>AES-256 PII encryption, TLSv1.3, BCrypt-11, WAF, anti-fraud URL encryption, data masking per role, immutable audit trail. Full security stack named explicitly.</td></tr>
-        <tr><td class="criterion">Performance SLAs</td><td><span class="tag tag-ok">Moderate</span><br>99.9% uptime SLA mentioned as a badge. No API response benchmarks, no deployment statistics.</td><td><span class="tag tag-win">Documented</span><br>80% APIs ≤1s, 99% ≤3s, 99% ≤5s with 2,800+ APIs. Deployment statistics from last 2 years included with downtime data.</td><td><span class="tag tag-win">Documented</span><br>Same API benchmarks (80% ≤1s, 99% ≤3s), plus ≤10 min scheduled downtime, ≤15 min RPO, ≤6h RTO — each with methodology.</td></tr>
-        <tr><td class="criterion">Technology Proof</td><td><span class="tag tag-gap">Vague</span><br>Tech stack mentioned (React, Next.js, PostgreSQL, Kubernetes) but not presented as a credibility signal — just listed.</td><td><span class="tag tag-win">Excellent</span><br>Detailed tech stack slide: Spring Boot, Spring Cloud, Nacos, CAS, React, MyBatis, MongoDB, Elasticsearch, Prometheus, Grafana, SkyWalking, Jenkins — all named with logos.</td><td><span class="tag tag-win">Strong</span><br>Next.js, React Native, Node.js, Prisma, Kafka, EKS, PostgreSQL 16, Redis, OpenSearch, Prometheus, Grafana, Datadog, Sentry — modern stack, well-presented.</td></tr>
-        <tr><td class="criterion">DR / BC Credibility</td><td><span class="tag tag-ok">Stated</span><br>RTO < 4hrs, RPO < 1hr mentioned in maintenance section. No methodology or RACI provided.</td><td><span class="tag tag-win">Proven</span><br>Full RACI matrix with 11 steps, estimated times per step, DR architecture diagram with AWS multi-region replication flow. Most credible.</td><td><span class="tag tag-win">Strong</span><br>RTO ≤6h, RPO ≤15 min with step-by-step documented procedures. DR drill before go-live mentioned. Clear but less detailed than Bytesforce.</td></tr>
-        <tr><td class="criterion">Real-World Evidence</td><td><span class="tag tag-gap">None</span><br>No deployment statistics, no client references, no case studies.</td><td><span class="tag tag-win">Highest</span><br>Deployment statistics from last 2 years shown. Screenshots of live systems (Prometheus, SkyWalking, ELK, Release Management, Data Patch). System has clearly been deployed.</td><td><span class="tag tag-ok">Moderate</span><br>References "multiple live insurance deployments across Asia" and "policy volumes in the tens of millions" but no screenshots of live environments.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">6 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">8 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">8.5 / 10</div></div>
-    </div>
-    <div class="insight red"><strong>Critical Gap — Proposal A:</strong> The trust badges in the Alliance Group proposal are asserted, not proven. A sophisticated insurer's IT or compliance team will immediately ask: "Where's the SOC 2 report? What's the actual API response documentation?" Without screenshots, benchmarks, or RACI matrices, these badges risk looking like marketing copy. This is the biggest credibility gap to address.</div>
-  </div>
-
-  <!-- SECTION 3 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">03</div>
-      <div class="section-title">What We're Building — Platform Scope</div>
-    </div>
-    <p class="section-desc">This section must clearly define the full functional scope — what modules are included, how deep each goes, and how they interconnect. Vagueness here is a red flag for procurement teams.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Module Depth</td><td><span class="tag tag-ok">Surface</span><br>6 pillars named (Policy, Claims, Distribution, Self-Service, Compliance, Analytics). Each described in 2-3 sentences. No sub-feature lists.</td><td><span class="tag tag-win">Deepest</span><br>Product Configuration shows 20+ sub-items (Coverages, Rate Tables, Rules, Formulas, UI Configurator). Claims Configuration with Authority Levels, Reserve Types, Settlement Authority. Finance with 15+ sub-items.</td><td><span class="tag tag-win">Strong</span><br>8 modules listed with detailed sub-features: Policy lifecycle, Claims (FNOL to settlement), RI (treaty/fac), Finance, Sales, Data Services, Customer 360, AI Layer — each with 4-6 bullet specifics.</td></tr>
-        <tr><td class="criterion">Low-Code Configurability</td><td><span class="tag tag-gap">Not Mentioned</span><br>No mention of how business rules, products, or UI are configured. Implies developer-dependent changes.</td><td><span class="tag tag-win">Best-in-class</span><br>On-screen configurator with WYSIWYG UI builder, metadata management (no DB changes required), DSL-based rule engine, product configurator with 20+ screens shown in screenshots.</td><td><span class="tag tag-win">Strong</span><br>"Object-Centric Canvas Workspaces" — build products, underwriting rules, pricing, workflows, UI layouts from visual interface. No code deployments for business changes.</td></tr>
-        <tr><td class="criterion">Reinsurance Coverage</td><td><span class="tag tag-gap">Missing</span><br>Not mentioned at all in the scope section.</td><td><span class="tag tag-win">Detailed</span><br>RI Configuration with RI Stakeholders, Risk Classes, Risk Accumulation, Outwards/Inwards Treaty, Fac Definition — with screenshots of live UI.</td><td><span class="tag tag-win">Included</span><br>Explicitly named as core module: "Treaty and facultative configuration — quota share, XOL, surplus. Outward and inward treaty definitions, RI cession automation."</td></tr>
-        <tr><td class="criterion">AI / Intelligence Layer</td><td><span class="tag tag-gap">None</span><br>No AI capabilities mentioned anywhere in the proposal.</td><td><span class="tag tag-ok">Mentioned</span><br>AI Services listed as an InsurerMate Kernel component. 3rd Party AI Services in integration view. Not elaborated as a use-case.</td><td><span class="tag tag-win">Featured</span><br>"Exception-Based Processing (AI Maker)" — AI ingests PDFs, extracts 40+ fields, cross-references policies. Humans review highlighted fields and approve. Specific use-case articulated.</td></tr>
-        <tr><td class="criterion">API Ecosystem</td><td><span class="tag tag-gap">Basic</span><br>Mentions "Open API" as a trust badge. No API count, no categorization, no partner enablement model described.</td><td><span class="tag tag-win">Exceptional</span><br>2,894 APIs documented. Categorized by user type (558 anonymous, 734 registered, 744 anon/customer, 844 channel, 2,789 back office). Partner-friendly API generation via DSL parameter converters. Create new APIs on-screen.</td><td><span class="tag tag-win">Strong</span><br>GraphQL + REST, categorized by user type with RBAC, dynamic parameter converters for partner-specific APIs, API-first philosophy prominently featured.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">6 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">9 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">9 / 10</div></div>
-    </div>
-    <div class="insight"><strong>Key Finding:</strong> The Alliance Group proposal is significantly underspecified here. Reinsurance is completely absent — which is a major gap for any insurance operator. The absence of low-code/no-code configuration is also a serious weakness: every insurer today asks "can we change product rules without calling a developer?" Both Bytesforce and Sayaintel answer this clearly.</div>
-  </div>
-
-  <!-- SECTION 4 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">04</div>
-      <div class="section-title">Portals & Access Points</div>
-    </div>
-    <p class="section-desc">Portal coverage determines day-to-day usability for every user type. The question is not just "how many portals" but how deeply each is specified, what its permissions model is, and how they share data.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Portal Count</td><td><span class="tag tag-ok">5 Portals</span><br>Admin, Agent/Broker, Customer, Claims, Mobile App.</td><td><span class="tag tag-win">7+ Portals</span><br>Direct Customer Portal, Intermediaries Portal/Mobile App, Insurer Staff Workbench, Intermediary Minisite, Affinity Minisite, Corporate Minisite, Aggregator Minisite, IoT Minisite.</td><td><span class="tag tag-win">6 Portals</span><br>Staff Workbench, Direct Customer Portal, Intermediaries Portal, Affinity Partner Minisite, Aggregator Minisite, Mobile App (iOS & Android).</td></tr>
-        <tr><td class="criterion">Feature Depth per Portal</td><td><span class="tag tag-ok">Moderate</span><br>4-5 bullet features per portal. Covers the obvious features but lacks depth on permissions, data isolation, and workflow specifics.</td><td><span class="tag tag-win">Deep</span><br>Architecture diagram shows portal-to-service API mapping. Screenshots of actual Staff Workbench, Product Configurator, Claims UI — real evidence.</td><td><span class="tag tag-win">Excellent</span><br>8 bullet features per portal with permission badges (RBAC, SSO/2FA, Hierarchy Auth, etc). Each portal has a defined permission model and named capabilities.</td></tr>
-        <tr><td class="criterion">Aggregator / Affinity Support</td><td><span class="tag tag-gap">Missing</span><br>No aggregator or affinity partner portal. Significant gap for an insurer with distribution ambitions.</td><td><span class="tag tag-win">Included</span><br>Aggregator Minisite and Affinity Minisite both in the out-of-box front office. IoT and Corporate Minisites also available.</td><td><span class="tag tag-win">Included</span><br>Affinity Partner Minisite with per-partner branding and configuration. Aggregator Minisite with API-first connectivity and integration log visibility.</td></tr>
-        <tr><td class="criterion">Data Isolation Model</td><td><span class="tag tag-gap">Not Described</span><br>No explanation of how data is isolated between portals or user types.</td><td><span class="tag tag-win">Documented</span><br>API security categorized by user type: Anonymous / Registered Customer / Channel / Back Office. Hierarchy-based data authorization for channel users. RBAC for internal staff.</td><td><span class="tag tag-win">Clear</span><br>Every portal description includes data access model: "Own Data Only" for customers, "Hierarchy Auth" for agents, "RBAC" for staff — presented as permission badges.</td></tr>
-        <tr><td class="criterion">Mobile Strategy</td><td><span class="tag tag-ok">Mentioned</span><br>Mobile App listed with biometric auth, push notifications, offline capability, digital ID cards. Not elaborated on tech stack.</td><td><span class="tag tag-ok">Flutter</span><br>Mobile App using Flutter noted in tech stack. Limited portal-specific features described for mobile.</td><td><span class="tag tag-win">Detailed</span><br>React Native, native iOS + Android, described separately with field-agent-specific workflow: quote, bind, client portfolio, renewal on mobile. Architecture rationale included.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">7 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">8.5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">9.5 / 10</div></div>
-    </div>
-    <div class="insight blue"><strong>Key Finding:</strong> The Alliance Group proposal misses the Aggregator and Affinity portals entirely — two critical distribution channels for modern insurance growth. Both Bytesforce and Sayaintel include them. Sayaintel wins this section by combining portal depth, permission model clarity, and mobile architecture justification into a unified narrative.</div>
-  </div>
-
-  <!-- SECTION 5 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">05</div>
-      <div class="section-title">System Architecture</div>
-    </div>
-    <p class="section-desc">Architecture credibility separates a real system from a concept. Enterprise buyers want to see layered diagrams, named components, proven tech choices, and scalability evidence.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Architecture Diagram Quality</td><td><span class="tag tag-ok">Visual</span><br>A layered table diagram covers Presentation, API Gateway, Core Services, Data, Infrastructure. Clean but CSS-built — not a formal architecture diagram.</td><td><span class="tag tag-win">Professional</span><br>Multiple diagrams: Integration View, Programmer View (3-tier), AWS Deployment Architecture, AWS Network Architecture, DR Architecture, Data Replication Flow. All formal, detailed, industry-standard.</td><td><span class="tag tag-win">Clear</span><br>Single comprehensive diagram showing Users → Security → Gateway → Services → Data → DevOps → External. Named components throughout. Modern stack visible.</td></tr>
-        <tr><td class="criterion">Multi-Tenancy</td><td><span class="tag tag-gap">Not Addressed</span><br>No mention of multi-tenancy, tenant isolation, or product tier structure.</td><td><span class="tag tag-win">Detailed</span><br>Programmer view shows Platform Tier / Tenant Tier / Product Tier with explicit data/logic isolation per tenant. Multi-tenancy is a core architectural feature.</td><td><span class="tag tag-win">Mentioned</span><br>"Multi-Tenant With Real Data Isolation — Complete data and logic isolation per tenant. No data leakage. No configuration bleed." Addressed prominently.</td></tr>
-        <tr><td class="criterion">Scalability Model</td><td><span class="tag tag-ok">Implied</span><br>Kubernetes mentioned in Infrastructure row. Auto-scaling mentioned. No specifics on horizontal scaling or volume benchmarks.</td><td><span class="tag tag-win">Quantified</span><br>Micro-service deployment recommended for yearly policy volume >20M. Data service handles 100M records in a single table via NoSQL. Read-write splitting documented.</td><td><span class="tag tag-win">Quantified</span><br>"Handles 100M+ Record Tables Natively — hot/cold data separation, R/W splitting with Postgres read replicas. Policy tables scale without re-architecture."</td></tr>
-        <tr><td class="criterion">Database Architecture</td><td><span class="tag tag-ok">Named</span><br>PostgreSQL, Redis, S3 mentioned. No replication strategy, no read/write split, no backup approach described here.</td><td><span class="tag tag-win">Comprehensive</span><br>MySQL (RDS), MongoDB, Elasticsearch, MyCAT (middleware), read-write split framework, hot/cold data separation, CDC for data pipeline, purge/archival framework with predefined rules.</td><td><span class="tag tag-win">Modern</span><br>PostgreSQL 16 with read replica, OpenSearch, Redis (ElastiCache), DynamoDB, S3 Data Lake (Parquet/JSON), AWS Systems Manager. Multi-AZ architecture.</td></tr>
-        <tr><td class="criterion">Observability Stack</td><td><span class="tag tag-gap">Not Shown</span><br>Monitoring not described in the architecture section at all.</td><td><span class="tag tag-win">Proven</span><br>Prometheus + Grafana, SkyWalking APM, ELK stack, Loki, built-in Integration Logs, Google Analytics — each with live screenshots from production deployments.</td><td><span class="tag tag-win">Named</span><br>Prometheus + Grafana, SkyWalking APM, ELK, Loki, AWS CloudWatch, Datadog, Sentry, Google Analytics (pre-integrated). Full observability stack listed in the architecture layer.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">5.5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">9 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">8.5 / 10</div></div>
-    </div>
-    <div class="insight red"><strong>Critical Gap — Proposal A:</strong> The architecture section is the weakest part of the Alliance Group proposal. A CSS table is not an architecture diagram. Multi-tenancy, read-write splitting, database replication strategy, and observability stack are all missing. An enterprise insurer's CTO will immediately notice these gaps. This section needs a complete rebuild with formal diagrams and named components.</div>
-  </div>
-
-  <!-- SECTION 6 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">06</div>
-      <div class="section-title">Deployment & DevOps</div>
-    </div>
-    <p class="section-desc">Deployment methodology determines risk to the business. Insurance companies operate 24/7 — any downtime is catastrophic. This section must prove zero-downtime capability with documented evidence.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Downtime Commitment</td><td><span class="tag tag-ok">Stated</span><br>"Zero-downtime practices" and "blue-green deployment" mentioned. No statistics to back this up.</td><td><span class="tag tag-win">Proven</span><br>Last 2 years: 52% with downtime (≤10 mins for change requests), 48% without downtime. Ad-hoc/hotfix = no downtime always. Statistics from real deployments.</td><td><span class="tag tag-win">Committed</span><br>≤10 min scheduled downtime. 0 min hotfix downtime. Kubernetes rolling deployments with session persistence. 100% containerized. Statistically credible.</td></tr>
-        <tr><td class="criterion">CI/CD Pipeline</td><td><span class="tag tag-ok">Named</span><br>"GitHub Actions CI/CD" mentioned in deployment step. No pipeline details, branch model, or environment management described.</td><td><span class="tag tag-win">Documented</span><br>Jenkins pipeline screenshot shown. Source code branch strategy: Master → Hotfix → Release → Develop → Feature, with environment mapping (Prod/Hotfix/UAT/Test/Local). Configuration management follows same flow.</td><td><span class="tag tag-win">Detailed</span><br>GitHub Actions + AWS CodePipeline. Same branching model (Master→Release→Develop→Feature→4 environments). On-screen release management and data patch management described.</td></tr>
-        <tr><td class="criterion">Testing Framework</td><td><span class="tag tag-gap">Not Described</span><br>UAT mentioned as a deployment step. No automated testing framework described.</td><td><span class="tag tag-win">Comprehensive</span><br>Auto Unit Test (JUnit), Auto API Test (Postman), Auto UI Test (Cypress), Premium/BI Test Studio (built-in), Code Security Scanning (SonarQube), Performance Testing (JMeter), VA/PT (3rd party).</td><td><span class="tag tag-win">Comprehensive</span><br>Unit (Jest/Vitest), API (Postman), UI Regression (Cypress), Performance (Playwright), Security Scanning (SonarQube + 3rd party VA/PT). Same quality as Bytesforce, modern stack.</td></tr>
-        <tr><td class="criterion">Rollback Capability</td><td><span class="tag tag-ok">Mentioned</span><br>"Full rollback capability" mentioned in data migration step. Not elaborated as a deployment risk-mitigation feature.</td><td><span class="tag tag-win">Documented</span><br>Deployment process flowchart shows explicit rollback path: Deploy to Prod → Verification → fail → fix → rollback verification → End. Each step defined.</td><td><span class="tag tag-win">Stated</span><br>"Rollback available within minutes if needed." Deployment step 4 explicitly states rollback is tested before production. Part of CI/CD flow.</td></tr>
-        <tr><td class="criterion">On-Screen Management</td><td><span class="tag tag-gap">Missing</span><br>No mention of on-screen release or data patch management capabilities.</td><td><span class="tag tag-win">Shown</span><br>Screenshots of Release Management UI and Data Patch Management UI — both with full CRUD, audit trail, status tracking. Production-level evidence.</td><td><span class="tag tag-win">Described</span><br>"On-screen data patch management — submit → approve → execute workflow with full audit." On-screen release management named explicitly.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">6.5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">8 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">9 / 10</div></div>
-    </div>
-  </div>
-
-  <!-- SECTION 7 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">07</div>
-      <div class="section-title">Project Timeline</div>
-    </div>
-    <p class="section-desc">A timeline must be credible, phased, and specific. Vague "16 weeks" without milestones, deliverables, or acceptance criteria is a red flag. Insurers want to know what happens when.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Phase Definition</td><td><span class="tag tag-ok">5 Phases</span><br>Discovery → Configuration → Testing → Training → Go-Live. Well-structured with specific week numbers (Weeks 1-3, 4-10, 11-14, 13-15, 16+).</td><td><span class="tag tag-gap">None</span><br>No project timeline included. This is a technical specification document, not a commercial proposal — timeline is entirely absent.</td><td><span class="tag tag-win">6 Phases</span><br>Months 1-2: Discovery. Months 3-4: Configuration. Months 5-6: Portal Build. Month 7: UAT & Migration. Month 8: Go-Live. Post go-live: Hypercare → Steady state. Monthly granularity.</td></tr>
-        <tr><td class="criterion">Deliverable Clarity</td><td><span class="tag tag-ok">Moderate</span><br>Each phase has a 2-3 sentence description. No explicit deliverables or acceptance milestones listed per phase.</td><td><span class="tag tag-gap">None</span><br>No timeline present.</td><td><span class="tag tag-win">Detailed</span><br>Each month lists 6 specific deliverables (e.g. "Data migration strategy & staging DB design", "RI treaty configuration", "DR drill and sign-off"). Acceptance milestones are embedded.</td></tr>
-        <tr><td class="criterion">Realistic Duration</td><td><span class="tag tag-ok">16 weeks</span><br>~4 months. Aggressive but plausible for a configured platform. Training overlaps with testing (Weeks 13-15) which is realistic.</td><td><span class="tag tag-gap">N/A</span><br>Not present.</td><td><span class="tag tag-win">8 months</span><br>More realistic for 6 portals + integrations + migration. Phased go-live (start with 1-2 products) demonstrates delivery maturity and risk management.</td></tr>
-        <tr><td class="criterion">Go-Live Risk Handling</td><td><span class="tag tag-ok">Mentioned</span><br>"30-day hypercare period" mentioned. Blue-green deployment. No phased rollout strategy described.</td><td><span class="tag tag-gap">N/A</span><br>Not present.</td><td><span class="tag tag-win">Detailed</span><br>Phased go-live (1-2 products first), hypercare with team on standby, DR drill before go-live, remaining products rolled out after stabilization, handover to steady-state support.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">7 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">8.5 / 10</div></div>
-    </div>
-    <div class="insight green"><strong>Where Proposal A Competes:</strong> The timeline section is one of the stronger areas of the Alliance Group proposal. The 5-phase structure with week numbers is clear and professional. However, it needs explicit deliverables per phase and a phased go-live strategy to match Sayaintel's quality. Bytesforce loses badly here — a technical spec with no timeline is commercially incomplete.</div>
-  </div>
-
-  <!-- SECTION 8 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">08</div>
-      <div class="section-title">Maintenance & Support Model</div>
-    </div>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Monitoring Stack</td><td><span class="tag tag-ok">Named</span><br>"24/7 infrastructure monitoring with automated alerting, anomaly detection." Tools not named in maintenance section.</td><td><span class="tag tag-win">Proven</span><br>Prometheus + Grafana (with dashboard screenshots), SkyWalking APM, ELK, Loki, built-in Integration Logs, Google Analytics. All shown with real screenshots.</td><td><span class="tag tag-win">Named</span><br>Prometheus + Grafana, SkyWalking APM, ELK, Loki, AWS CloudWatch, Datadog, Sentry, Google Analytics — pre-integrated. All named with purpose.</td></tr>
-        <tr><td class="criterion">Patch/Upgrade Process</td><td><span class="tag tag-ok">Stated</span><br>"Critical patches < 4 hours." Monthly release cadence. No process documentation for how upgrades are governed.</td><td><span class="tag tag-win">Documented</span><br>Major/minor version upgrade timelines per component (MySQL, Elasticsearch, Tomcat, Spring Boot, Java). Open-source maintenance process flowchart: Community Notice → Screen Updates → Impact Analysis → Client Notification → Upgrade → Testing → Deploy.</td><td><span class="tag tag-win">Documented</span><br>Per-component upgrade governance table (Postgres minor: 6+ months, Node.js LTS: 2+ years, emergency patches: 24h review). Open-source maintenance process described.</td></tr>
-        <tr><td class="criterion">Housekeeping / Data Lifecycle</td><td><span class="tag tag-gap">Missing</span><br>Not addressed in the proposal at all. For an insurer with millions of policies, this is a significant operational concern.</td><td><span class="tag tag-win">Comprehensive</span><br>Housekeeping/Archival/Purge framework with predefined rules per object type (Login Session, API Cache, Integration Logs, GL Entries, Job History). Configurable and extensible.</td><td><span class="tag tag-win">Included</span><br>Same housekeeping automation with predefined rules (Integration Logs: archive 1yr, App Logs: rotate daily, GL Entries: archive 7 days). Configurable on-screen.</td></tr>
-        <tr><td class="criterion">Dedicated Support</td><td><span class="tag tag-win">Strong</span><br>Named CSM, Technical Account Manager, tiered helpdesk, QBRs. This is the most customer-relationship-oriented support model of the three.</td><td><span class="tag tag-ok">Implicit</span><br>Support implied through the platform's built-in tooling (monitoring, logs, alerts) but no explicit client success model described.</td><td><span class="tag tag-ok">Mentioned</span><br>"Sayaintel engineering team on standby" during hypercare. Steady-state support model mentioned but not detailed.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">6.5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">8 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">9 / 10</div></div>
-    </div>
-  </div>
-
-  <!-- SECTION 9 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">09</div>
-      <div class="section-title">Incident Response</div>
-    </div>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Severity Classification</td><td><span class="tag tag-ok">4 Levels</span><br>P1 (15 min), P2 (1 hr), P3 (4 hrs), P4 (24 hrs). Response times are aggressive and well-defined.</td><td><span class="tag tag-win">4 Levels</span><br>Severity definitions with response times defined in SLA table. P1 = 15 min response. More formal SLA documentation style.</td><td><span class="tag tag-win">4 Levels</span><br>S1-S4 with both response AND resolution targets: S1 ≤30 min response / ≤4h resolution. S2 ≤2h / ≤8h. Dual commitment is stronger than response-only.</td></tr>
-        <tr><td class="criterion">Response Workflow</td><td><span class="tag tag-ok">6 Steps</span><br>Detection → Triage → Escalation → Communication → Resolution → Post-Mortem. Solid flow, clearly presented.</td><td><span class="tag tag-ok">Defined</span><br>SLA framework defined. RACI for DR included. Less narrative on the actual response workflow steps.</td><td><span class="tag tag-win">5 Steps</span><br>Detection (automated) → Triage & Classification → Active Remediation → Fix Deployed (zero downtime) → Post-Incident Review. Tool-named at each step (Datadog, Sentry, CloudWatch).</td></tr>
-        <tr><td class="criterion">Tooling Specificity</td><td><span class="tag tag-gap">Generic</span><br>No specific monitoring tools named in the incident flow. "Automated alert" and "on-call engineering" without tooling context.</td><td><span class="tag tag-ok">Partial</span><br>Prometheus, Grafana, SkyWalking shown for monitoring but not explicitly mapped to the incident flow steps.</td><td><span class="tag tag-win">Specific</span><br>Step 1: Datadog, Sentry, CloudWatch. Step 3: Logs via Datadog, traces via Sentry, integration logs for 3rd party failures. Tool-to-step mapping is unique and credible.</td></tr>
-        <tr><td class="criterion">DR Integration</td><td><span class="tag tag-ok">Referenced</span><br>RTO/RPO mentioned in maintenance. Not cross-referenced from incident response section.</td><td><span class="tag tag-win">Full RACI</span><br>11-step DR RACI with responsible/accountable parties, estimated times per step, parallel execution paths. Most thorough DR documentation of the three.</td><td><span class="tag tag-win">Mentioned</span><br>RTO ≤6h, RPO ≤15 min. DR drill before go-live. Annual DR drill. RACI referenced. Less detail than Bytesforce but better integrated with the proposal narrative.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">6 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">8.5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">8.5 / 10</div></div>
-    </div>
-    <div class="insight"><strong>Key Finding:</strong> Sayaintel wins on response workflow quality (tool-named at each step, dual response + resolution SLAs). Bytesforce wins on DR documentation depth (full RACI matrix). Alliance Group's incident section is the most visually clear but the least technically substantiated — response time commitments without named tooling or escalation contacts feel aspirational rather than operational.</div>
-  </div>
-
-  <!-- SECTION 10 -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">10</div>
-      <div class="section-title">Design Quality & Proposal Experience</div>
-    </div>
-    <p class="section-desc">A proposal is also a product demo. How it looks and feels signals the quality of what the vendor builds. Poor design = poor software, in the buyer's unconscious mind.</p>
-    <table class="comp-table">
-      <thead><tr><th>Criterion</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Visual Identity</td><td><span class="tag tag-ok">Good</span><br>Navy + gold palette is premium and insurance-appropriate. Serif / sans-serif pairing (Cormorant + DM Sans) is distinctive. Consistent throughout.</td><td><span class="tag tag-gap">Poor</span><br>PowerPoint/PDF format. Dark green background with white text. Functional but dated. No web interactivity. Difficult to navigate.</td><td><span class="tag tag-win">Excellent</span><br>Clean white + muted typography with bold editorial sections. Deeply intentional layout — asymmetric, generous whitespace, strong typographic hierarchy. Web-native and responsive.</td></tr>
-        <tr><td class="criterion">Navigation & Flow</td><td><span class="tag tag-ok">Good</span><br>Fixed navigation bar with anchor links to all 9 sections. Smooth scroll. Proposal is a single scrolling page — easy to present live.</td><td><span class="tag tag-gap">Static</span><br>PDF slide deck — no navigation, no interactivity. Requires presenter to advance slides. Cannot be shared as a self-contained experience.</td><td><span class="tag tag-win">Excellent</span><br>Fixed nav bar, section IDs, live demo link, direct WhatsApp CTA, email CTA. Designed to be shared asynchronously and read without a presenter.</td></tr>
-        <tr><td class="criterion">Information Density</td><td><span class="tag tag-ok">Balanced</span><br>Good balance of section headers, descriptive text, and visual elements. Avoids bullet-point overload. Some sections are thin (architecture, trust).</td><td><span class="tag tag-gap">Overwhelming</span><br>Extreme information density — 74 slides of detailed specifications. High value for due diligence but overwhelming as a first-contact proposal. No visual breathing room.</td><td><span class="tag tag-win">Optimal</span><br>Dense where needed (portal features, architecture layers, security) but the editorial typography and whitespace make it feel approachable. Progressive disclosure via scroll.</td></tr>
-        <tr><td class="criterion">Call to Action</td><td><span class="tag tag-ok">Present</span><br>"Schedule a Demo" and "Contact Alliance Group" buttons in the CTA section. Email placeholder not real. No phone/WhatsApp.</td><td><span class="tag tag-gap">None</span><br>No CTA. No contact details in the document. No next steps. Ends as a technical document.</td><td><span class="tag tag-win">Multi-channel</span><br>Three CTAs: live demo link (clickable), email (himanshu@sayaintel.com), WhatsApp number (+91 9167371129). Proposal closes with a named person — personal and actionable.</td></tr>
-        <tr><td class="criterion">Proposal as Demo</td><td><span class="tag tag-gap">No</span><br>Does not link to a live product demo or working prototype.</td><td><span class="tag tag-gap">No</span><br>Screenshots of live system shown — these act as evidence but no interactive demo linked.</td><td><span class="tag tag-win">Yes</span><br>Direct link to live demo: alliance-os.sayaintel.com. The proposal is itself a demonstration of what they build — a perfectly executed web experience.</td></tr>
-      </tbody>
-    </table>
-    <div class="score-row">
-      <div class="score-chip"><div class="score-chip-label">Alliance Group</div><div class="score-chip-val a">5.5 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Bytesforce</div><div class="score-chip-val b">3 / 10</div></div>
-      <div class="score-chip"><div class="score-chip-label">Sayaintel</div><div class="score-chip-val c">9.5 / 10</div></div>
-    </div>
-    <div class="insight green"><strong>Sayaintel's Structural Advantage:</strong> The Sayaintel proposal is itself a product demo. It links to a live system (alliance-os.sayaintel.com), provides a WhatsApp number for instant contact, and closes with a named person. These are signals of confidence and operational readiness. The Alliance Group proposal needs a live demo link and named contact to close the credibility gap on this dimension.</div>
-  </div>
-
-  <!-- TECH STACK -->
-  <div class="section" id="tech">
-    <div class="section-header">
-      <div class="section-num">11</div>
-      <div class="section-title">Technology Stack Comparison</div>
-    </div>
-    <p class="section-desc">The technology choices signal architectural philosophy, team capability, and long-term maintainability. Modern vs legacy stacks matter significantly in enterprise procurement.</p>
-    <table class="comp-table">
-      <thead><tr><th>Layer</th><th class="head-a">A — Alliance Group</th><th class="head-b">B — Bytesforce</th><th class="head-c">C — Sayaintel</th></tr></thead>
-      <tbody>
-        <tr><td class="criterion">Frontend</td><td>React, Next.js, TypeScript, Tailwind CSS</td><td>React, Ant Design, NGINX, KEEPALIVED</td><td>React, Next.js (App Router), Tailwind CSS v4, shadcn/ui</td></tr>
-        <tr><td class="criterion">Mobile</td><td>React Native (iOS + Android)</td><td>Flutter</td><td>React Native / PWA (iOS + Android)</td></tr>
-        <tr><td class="criterion">Backend</td><td>Node.js, TypeScript, Prisma, Zod, tRPC/GraphQL, Kafka</td><td>Spring Boot, Spring Cloud, MyBatis, Swagger, DSLforce, CAS, Nacos, Sentinel</td><td>Node.js, TypeScript, Prisma/Drizzle ORM, Zod, tRPC/GraphQL, Kafka</td></tr>
-        <tr><td class="criterion">Database</td><td>PostgreSQL, Redis, S3, DynamoDB, OpenSearch</td><td>MySQL (RDS), MongoDB, Elasticsearch, MyCAT, Seaweedfs</td><td>PostgreSQL 16, AWS ElastiCache (Redis), OpenSearch, DynamoDB, AWS S3</td></tr>
-        <tr><td class="criterion">Infrastructure</td><td>AWS EKS (Kubernetes), Docker, AWS API Gateway</td><td>AWS ECS/EKS, Docker, AWS services</td><td>AWS EKS (Kubernetes), Docker, AWS CodePipeline, Turborepo</td></tr>
-        <tr><td class="criterion">Monitoring</td><td>Prometheus, Grafana, SkyWalking (implied)</td><td>Prometheus, Grafana, SkyWalking APM, ELK, Loki, CloudWatch</td><td>Prometheus, Grafana, Datadog, AWS CloudWatch, Sentry, Kibana</td></tr>
-        <tr><td class="criterion">CI/CD</td><td>GitHub Actions (mentioned)</td><td>Jenkins, GitLab</td><td>GitHub Actions, AWS CodePipeline, Turborepo</td></tr>
-        <tr><td class="criterion">Testing</td><td>Not described</td><td>JUnit, Cypress, Postman, JMeter, SonarQube, Test Studio</td><td>Jest/Vitest, Cypress, Playwright, ESLint/Prettier, SonarQube</td></tr>
-        <tr><td class="criterion">Stack Generation</td><td><span class="tag tag-ok">Modern</span></td><td><span class="tag tag-neutral">Enterprise Java (mature)</span></td><td><span class="tag tag-win">Most Modern</span></td></tr>
-      </tbody>
-    </table>
-    <div class="insight"><strong>Stack Analysis:</strong> Proposals A and C are functionally identical in stack — both are Next.js + Node.js + PostgreSQL on Kubernetes. This is the most modern, most hireable stack. Bytesforce runs a mature Spring Boot + MySQL + MongoDB Java stack — deeply enterprise-proven (deployed at MSIG Insurance, Asia) but heavier, slower to iterate, and less aligned with modern development team expectations. Sayaintel's stack is marginally more detailed (Drizzle ORM, Turborepo, Playwright) but architecturally the same as Proposal A. The differentiator between A and C is not the stack — it is the proposal depth and evidence.</div>
-  </div>
-
-  <!-- FINAL VERDICT -->
-  <div class="section" id="verdict">
-    <div class="section-header">
-      <div class="section-num">12</div>
-      <div class="section-title">Final Verdict & Recommendations</div>
-    </div>
-
-    <div class="verdict">
-      <div class="verdict-title">What each proposal does well — and where it fails</div>
-      <div class="verdict-grid">
-        <div class="verdict-col">
-          <h5 class="a">A — Alliance Group · 63/100</h5>
-          <ul>
-            <li>Best visual identity of the three — navy + gold is premium and appropriate</li>
-            <li>Strong timeline section with week-by-week phasing</li>
-            <li>Dedicated support model (named CSM, QBRs) is commercially strongest</li>
-            <li>CTA section is well-structured and conversion-oriented</li>
-            <li>Incident response workflow is clearly visualised</li>
-            <br>
-            <li style="color:#E05252">Missing: Reinsurance module entirely</li>
-            <li style="color:#E05252">Missing: Aggregator & Affinity portals</li>
-            <li style="color:#E05252">Missing: Low-code / no-code capability</li>
-            <li style="color:#E05252">Weak: Architecture (CSS table ≠ diagram)</li>
-            <li style="color:#E05252">Weak: Trust signals are asserted, not proven</li>
-            <li style="color:#E05252">Missing: Live demo link</li>
-            <li style="color:#E05252">Missing: AI capability</li>
-          </ul>
-        </div>
-        <div class="verdict-col">
-          <h5 class="b">B — Bytesforce · 71/100</h5>
-          <ul>
-            <li>Most technically credible — live screenshots of deployed systems</li>
-            <li>2,894 APIs documented with user-type categorization</li>
-            <li>Best disaster recovery documentation (full RACI matrix)</li>
-            <li>Multi-tenancy architecture explicitly modelled</li>
-            <li>Deployment statistics from last 2 years</li>
-            <br>
-            <li style="color:#E05252">No commercial proposal — entirely a tech spec</li>
-            <li style="color:#E05252">No timeline, no commercial terms, no CTA</li>
-            <li style="color:#E05252">No hero section — alienates business stakeholders</li>
-            <li style="color:#E05252">Poor design — PowerPoint format, not web</li>
-            <li style="color:#E05252">Cannot be shared as a self-serve proposal</li>
-            <li style="color:#E05252">74 slides — overwhelming as first contact</li>
-          </ul>
-        </div>
-        <div class="verdict-col">
-          <h5 class="c">C — Sayaintel · 89/100</h5>
-          <ul>
-            <li>Best overall proposal — wins on narrative, depth, and design</li>
-            <li>6 portals including Aggregator & Affinity minisites</li>
-            <li>AI layer with specific use-case (PDF ingestion, 40+ field extraction)</li>
-            <li>Live demo linked (alliance-os.sayaintel.com)</li>
-            <li>Named contact + WhatsApp CTA — most actionable close</li>
-            <li>Low-code configuration and visual product builder described</li>
-            <li>Multi-tenant architecture with data isolation model</li>
-            <li>Technology ownership / IP model described (no vendor lock-in)</li>
-            <br>
-            <li style="color:#E05252">No live screenshots of deployed systems (unlike Bytesforce)</li>
-            <li style="color:#E05252">DR documentation less detailed than Bytesforce RACI</li>
-            <li style="color:#E05252">No named support contact beyond hypercare phase</li>
-          </ul>
-        </div>
+      <div class="ident">
+        <div class="f"><label>Reviewer name</label><input id="rvName" placeholder="Full name"></div>
+        <div class="f"><label>Role / Title</label><input id="rvRole" placeholder="e.g. Head of IT, Security Lead"></div>
+        <div class="f"><label>Date</label><input id="rvDate" type="date"></div>
       </div>
     </div>
 
-    <div class="insight"><strong>For Alliance Group:</strong> The ideal strategy is to combine the design and structure of Proposal A with the technical depth of Bytesforce and the commercial narrative of Sayaintel. The 7 immediate improvements to make to the Alliance Group proposal: (1) Add a formal architecture diagram with named components, (2) Add Reinsurance as a module, (3) Add Aggregator + Affinity portals, (4) Add low-code/on-screen configurator capability, (5) Add quantified performance stats in the hero (API response times, deployment downtime data), (6) Add a live demo link, (7) Replace generic trust badges with proven SLA data, security architecture details, and named monitoring tooling.</div>
-  </div>
-
-  <!-- FINAL BOX -->
-  <div class="final-box">
-    <div class="final-title">Proposal C wins — but Proposal A can close the gap</div>
-    <p class="final-sub">Sayaintel leads because their proposal is itself a demonstration of their capability. The Alliance Group proposal has the right structure and the strongest visual identity — it needs 7 specific additions to compete at the same level. Bytesforce has the deepest technical proof but is commercially unusable as a standalone proposal.</p>
-    <div class="final-chips">
-      <div class="final-chip">Add RI Module</div>
-      <div class="final-chip">Add Aggregator Portal</div>
-      <div class="final-chip">Add Low-Code Config</div>
-      <div class="final-chip">Formal Architecture Diagram</div>
-      <div class="final-chip">Quantified SLA in Hero</div>
-      <div class="final-chip">Live Demo Link</div>
-      <div class="final-chip">Named Monitoring Tooling</div>
+    <div class="domains" id="domains">
+      <!-- 01 -->
+      <div class="domain" data-no="01" data-title="Architecture & Platform">
+        <div class="dh"><span class="dno">01</span><div><div class="dt">Architecture &amp; Platform</div><div class="dg">Fit with Alliance standards · scalability · multi-tenancy · kernel &amp; service isolation</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Concern / pain point</span><textarea class="concern" rows="2" placeholder="What concerns you here?"></textarea></label>
+        <label class="fl"><span>Change requested</span><textarea class="change" rows="2" placeholder="What would you want changed or confirmed?"></textarea></label>
+      </div>
+      <!-- 02 -->
+      <div class="domain" data-no="02" data-title="Security & Identity">
+        <div class="dh"><span class="dno">02</span><div><div class="dt">Security &amp; Identity</div><div class="dg">Encryption (AES-256 / TLS 1.3) · RBAC &amp; data masking · SSO / SAML / OAuth2 / JWT · audit trail</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Concern / pain point</span><textarea class="concern" rows="2" placeholder="What concerns you here?"></textarea></label>
+        <label class="fl"><span>Change requested</span><textarea class="change" rows="2" placeholder="What would you want changed or confirmed?"></textarea></label>
+      </div>
+      <!-- 03 -->
+      <div class="domain" data-no="03" data-title="Data, Residency & Compliance">
+        <div class="dh"><span class="dno">03</span><div><div class="dt">Data, Residency &amp; Compliance</div><div class="dg">af-south-1 residency · TIRA · Tanzania PDPA · ISO 27001 / SOC 2 · legacy data migration</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Concern / pain point</span><textarea class="concern" rows="2" placeholder="What concerns you here?"></textarea></label>
+        <label class="fl"><span>Change requested</span><textarea class="change" rows="2" placeholder="What would you want changed or confirmed?"></textarea></label>
+      </div>
+      <!-- 04 -->
+      <div class="domain" data-no="04" data-title="Integrations">
+        <div class="dh"><span class="dno">04</span><div><div class="dt">Integrations</div><div class="dg">Payment gateways · General Ledger · AMLO / blacklist · SMS / email · existing core systems · 3rd-party AI</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Concern / pain point</span><textarea class="concern" rows="2" placeholder="What concerns you here?"></textarea></label>
+        <label class="fl"><span>Change requested</span><textarea class="change" rows="2" placeholder="What would you want changed or confirmed?"></textarea></label>
+      </div>
+      <!-- 05 -->
+      <div class="domain" data-no="05" data-title="Deployment, DevOps & Environments">
+        <div class="dh"><span class="dno">05</span><div><div class="dt">Deployment, DevOps &amp; Environments</div><div class="dg">CI/CD · AWS EKS · rollback · Prod / UAT / Test parity · change management</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Concern / pain point</span><textarea class="concern" rows="2" placeholder="What concerns you here?"></textarea></label>
+        <label class="fl"><span>Change requested</span><textarea class="change" rows="2" placeholder="What would you want changed or confirmed?"></textarea></label>
+      </div>
+      <!-- 06 -->
+      <div class="domain" data-no="06" data-title="Performance, Availability & DR">
+        <div class="dh"><span class="dno">06</span><div><div class="dt">Performance, Availability &amp; DR</div><div class="dg">Latency targets · RTO &le; 6h / RPO &le; 15m · scaling to 100M+ records · multi-AZ failover</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Concern / pain point</span><textarea class="concern" rows="2" placeholder="What concerns you here?"></textarea></label>
+        <label class="fl"><span>Change requested</span><textarea class="change" rows="2" placeholder="What would you want changed or confirmed?"></textarea></label>
+      </div>
+      <!-- 07 -->
+      <div class="domain" data-no="07" data-title="Support, Maintenance & Governance">
+        <div class="dh"><span class="dno">07</span><div><div class="dt">Support, Maintenance &amp; Governance</div><div class="dg">Incident SLAs (S1–S4) · upgrade cadence · ownership &amp; handover model</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Concern / pain point</span><textarea class="concern" rows="2" placeholder="What concerns you here?"></textarea></label>
+        <label class="fl"><span>Change requested</span><textarea class="change" rows="2" placeholder="What would you want changed or confirmed?"></textarea></label>
+      </div>
+      <!-- 08 -->
+      <div class="domain" data-no="08" data-title="Open Questions, Blockers & Must-Haves">
+        <div class="dh"><span class="dno">08</span><div><div class="dt">Open Questions, Blockers &amp; Must-Haves</div><div class="dg">Anything that must be resolved or confirmed before technical sign-off</div></div></div>
+        <div class="drow">
+          <div class="field"><span>Status</span><select class="status"><option value="">— Select —</option><option>Meets our standard</option><option>Needs change</option><option>Blocker</option></select></div>
+          <div class="field"><span>Priority</span><select class="priority"><option value="">— Select —</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        </div>
+        <label class="fl"><span>Open questions / must-haves</span><textarea class="concern" rows="2" placeholder="List anything outstanding"></textarea></label>
+        <label class="fl"><span>What would unblock sign-off</span><textarea class="change" rows="2" placeholder="What needs to happen?"></textarea></label>
+      </div>
     </div>
+
+    <footer><div class="l">Sayaintel Corporation · Enterprise Platforms Division · <a href="https://www.sayaintel.com">www.sayaintel.com</a></div></footer>
   </div>
 
-</div><!-- end page -->
+  <div class="bar"><div class="barin">
+    <span class="status" id="saveState">Auto-saved</span>
+    <button class="btn ghost danger" id="btnClear" type="button">Clear</button>
+    <button class="btn" id="btnPrint" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v6H8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Print / PDF</button>
+    <button class="btn" id="btnCopy" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 012-2h8" stroke="currentColor" stroke-width="1.8"/></svg>Copy</button>
+    <button class="btn" id="btnDownload" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download</button>
+    <button class="btn primary" id="btnEmail" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#04121f" stroke-width="1.8"/><path d="M4 7l8 6 8-6" stroke="#04121f" stroke-width="1.8"/></svg>Email to Sayaintel</button>
+  </div></div>
+
+  <div class="toast" id="toast"></div>
 
 <script>
-// Animate bars on load
-document.addEventListener('DOMContentLoaded', () => {
-  const fills = document.querySelectorAll('.bar-fill');
-  fills.forEach(f => {
-    const w = f.style.width;
-    f.style.width = '0';
-    setTimeout(() => { f.style.width = w; }, 300);
+  var KEY='alliance_os_it_review_v1';
+  var domains=[].slice.call(document.querySelectorAll('.domain'));
+  var ids=['rvName','rvRole','rvDate'];
+
+  function fields(d){return {status:d.querySelector('.status'),priority:d.querySelector('.priority'),concern:d.querySelector('.concern'),change:d.querySelector('.change')};}
+
+  function save(){
+    var data={meta:{},domains:[]};
+    ids.forEach(function(i){data.meta[i]=document.getElementById(i).value;});
+    domains.forEach(function(d){var f=fields(d);data.domains.push({status:f.status.value,priority:f.priority.value,concern:f.concern.value,change:f.change.value});});
+    try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
+    flash();
+    refreshMeter();
+  }
+  function load(){
+    var raw;try{raw=localStorage.getItem(KEY);}catch(e){}
+    if(!raw)return;
+    var data=JSON.parse(raw);
+    ids.forEach(function(i){if(data.meta&&data.meta[i]!=null)document.getElementById(i).value=data.meta[i];});
+    if(data.domains){domains.forEach(function(d,n){var s=data.domains[n];if(!s)return;var f=fields(d);f.status.value=s.status||'';f.priority.value=s.priority||'';f.concern.value=s.concern||'';f.change.value=s.change||'';d.setAttribute('data-status',s.status||'');});}
+  }
+  function refreshMeter(){
+    var done=0;domains.forEach(function(d){var f=fields(d);if(f.status.value||f.concern.value.trim()||f.change.value.trim())done++;});
+    document.getElementById('meterFill').style.width=(done/domains.length*100)+'%';
+    document.getElementById('meterLbl').textContent=done+' / '+domains.length+' reviewed';
+  }
+  var t1;
+  function flash(){var s=document.getElementById('saveState');s.textContent='Saved ✓';clearTimeout(t1);t1=setTimeout(function(){s.textContent='Auto-saved';},1200);}
+
+  function compile(){
+    var name=document.getElementById('rvName').value||'(unnamed)';
+    var role=document.getElementById('rvRole').value||'';
+    var date=document.getElementById('rvDate').value||'';
+    var L=[];
+    L.push('ALLIANCE OS — TECHNICAL EVALUATION & REVIEW');
+    L.push('Reviewer: '+name+(role?' ('+role+')':'')+(date?'   Date: '+date:''));
+    L.push('Prepared for: Sayaintel Corporation');
+    L.push('');
+    domains.forEach(function(d){
+      var f=fields(d);
+      L.push(d.getAttribute('data-no')+'. '+d.getAttribute('data-title'));
+      L.push('   Status: '+(f.status.value||'—')+'   Priority: '+(f.priority.value||'—'));
+      if(f.concern.value.trim())L.push('   Concern: '+f.concern.value.trim());
+      if(f.change.value.trim())L.push('   Change requested: '+f.change.value.trim());
+      L.push('');
+    });
+    return L.join('\n');
+  }
+
+  function toast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2200);}
+
+  function download(){
+    var blob=new Blob([compile()],{type:'text/plain;charset=utf-8'});
+    var name=(document.getElementById('rvName').value||'reviewer').replace(/[^a-z0-9]+/gi,'_');
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='AllianceOS_IT_Review_'+name+'.txt';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    toast('Review downloaded — attach it in your reply.');
+  }
+  function copy(){
+    var txt=compile();
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast('Review copied to clipboard.');},fallbackCopy.bind(null,txt));}
+    else fallbackCopy(txt);
+  }
+  function fallbackCopy(txt){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Review copied to clipboard.');}catch(e){toast('Press Ctrl/Cmd+C to copy.');}document.body.removeChild(ta);}
+  function email(){
+    var txt=compile();
+    var name=document.getElementById('rvName').value||'';
+    var subj='Alliance OS — IT Technical Review'+(name?' · '+name:'');
+    copy();
+    var url='mailto:himanshu@sayaintel.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(txt);
+    window.location.href=url;
+    setTimeout(function(){toast('Email drafted. Review also copied — paste if anything is missing.');},400);
+  }
+
+  // wire up
+  document.getElementById('domains').addEventListener('input',function(e){
+    var d=e.target.closest('.domain');
+    if(d&&e.target.classList.contains('status'))d.setAttribute('data-status',e.target.value);
+    save();
   });
-});
+  ids.forEach(function(i){document.getElementById(i).addEventListener('input',save);});
+  document.getElementById('btnDownload').addEventListener('click',download);
+  document.getElementById('btnCopy').addEventListener('click',copy);
+  document.getElementById('btnEmail').addEventListener('click',email);
+  document.getElementById('btnPrint').addEventListener('click',function(){window.print();});
+  document.getElementById('btnClear').addEventListener('click',function(){
+    if(!confirm('Clear all your entries on this device? This cannot be undone.'))return;
+    try{localStorage.removeItem(KEY);}catch(e){}
+    location.reload();
+  });
+
+  // init
+  (function(){
+    var di=document.getElementById('rvDate');
+    load();
+    if(!di.value){di.value=new Date().toISOString().slice(0,10);}
+    refreshMeter();
+  })();
 </script>
 </body>
 </html>
